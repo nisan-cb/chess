@@ -2,6 +2,10 @@ let section1;
 let table;
 
 function createBord(areaObj) {
+    if (!areaObj) {
+        console.log("error in createBord function - areaObj not defined");
+        return;
+    }
     table = document.createElement('table');
     table.setAttribute('id', 'board');
     areaObj.appendChild(table);
