@@ -3,6 +3,7 @@ let table;
 
 function createBord(areaObj) {
     table = document.createElement('table');
+    table.setAttribute('id', 'board');
     areaObj.appendChild(table);
     for (let i = 0; i < 8; i++) {
         let tr = document.createElement('tr');
