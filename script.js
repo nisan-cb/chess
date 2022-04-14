@@ -1,5 +1,7 @@
 let section1;
 let table;
+const ROWS = 8;
+const COLS = 8;
 
 function createBord(areaObj) {
     if (!areaObj) {
@@ -9,10 +11,10 @@ function createBord(areaObj) {
     table = document.createElement('table');
     table.setAttribute('id', 'board');
     areaObj.appendChild(table);
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < ROWS; i++) {
         let tr = document.createElement('tr');
         table.appendChild(tr);
-        for (let j = 0; j < 8; j++) {
+        for (let j = 0; j < COLS; j++) {
             let td = document.createElement('td');
             tr.appendChild(td);
         }
