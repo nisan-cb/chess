@@ -9,7 +9,7 @@ let blackGroup = {};
 class Piece {
     constructor(color, role) {
         this.color = color;
-        this.src = `/images/${color}_${role}.png`;
+        this.src = `./images/${color}_${role}.png`;
         this.el = document.createElement('img');
         this.el.setAttribute('src', this.src);
         this.r = 0;
