@@ -18,6 +18,7 @@ class Piece {
         this.el.src = this.src;
         this.r = 0;
         this.c = 0;
+        this.validSteps = [];
     }
     display(table) {
         table.rows[this.r].cells[this.c].appendChild(this.el);
@@ -38,93 +39,99 @@ class King extends Piece {
 class Queen extends Piece {
     constructor(color) {
         super(color, 'queen')
+        this.el.addEventListener('click', (e) => { this.calcValidSteps(e) });
+    }
+    calcValidSteps(e) {
+        e.stopPropagation();
+        cleanValidSteps();
+        currentPiece = this;
+        // for(i=1;i<ROWS;i++)
+        // this.validSteps.push()
     }
 }
 class Rook extends Piece {
     constructor(color) {
         super(color, 'rook')
+        this.el.addEventListener('click', (e) => { this.calcValidSteps(e) });
+    }
+    calcValidSteps(e) {
+        e.stopPropagation();
+        cleanValidSteps();
+        currentPiece = this;
+        for (let i = 0; i < ROWS; i++)
+            this.validSteps.push([i, this.c]);
+        for (let j = 0; j < ROWS; j++)
+            this.validSteps.push([this.r, j]);
+        displayValidSteps();
     }
 }
 class Bishop extends Piece {
     constructor(color) {
         super(color, 'bishop')
-        this.el.addEventListener('click', (e) => { this.displayValidSteps(e) })
+        this.el.addEventListener('click', (e) => { this.calcValidSteps(e) })
     }
-    displayValidSteps(e) {
+    calcValidSteps(e) {
         e.stopPropagation();
-        cleanValidStepsMatrix();
+        cleanValidSteps();
         currentPiece = this;
-        let new_r = this.r, new_c = this.c;
         for (let i = 1; i + this.r < ROWS && i + this.c < COLS; i++) {
-            validStepsMatrix[this.r + i][this.c + i] = 1;
+            this.validSteps.push([this.r + i, this.c + i]);
         }
         for (let i = 1; this.r - i >= 0 && this.c - i >= 0; i++) {
-            validStepsMatrix[this.r - i][this.c - i] = 1;
+            this.validSteps.push([this.r - i, this.c - i]);
         }
         for (let i = 1; this.r - i >= 0 && this.c + i < COLS; i++) {
-            validStepsMatrix[this.r - i][this.c + i] = 1;
+            this.validSteps.push([this.r - i, this.c + i]);
         }
         for (let i = 1; this.r + i < ROWS && this.c - i >= 0; i++) {
-            validStepsMatrix[this.r + i][this.c - i] = 1;
+            this.validSteps.push([this.r + i, this.c - i]);
         }
-        displayMatrix();
+        displayValidSteps();
     }
 }
 class Knight extends Piece {
     constructor(color) {
         super(color, 'knight')
         this.vector = [[-1, 2], [-1, -2], [1, 2], [1, - 2], [-2, 1], [-2, -1], [2, 1], [2, -1]];
-        // this.vector = [1, 2, 3];
-        this.el.addEventListener('click', (e) => { this.displayValidSteps(e) });
+        this.el.addEventListener('click', (e) => { this.calcValidSteps(e) });
     }
-    displayValidSteps(e) {
+    calcValidSteps(e) {
         e.stopPropagation();
-        cleanValidStepsMatrix();
+        cleanValidSteps();
         currentPiece = this;
-        console.log(this.vector[0]);
         for (let step of this.vector) {
             let new_r = this.r + step[0], new_c = this.c + step[1];
             if (new_r >= 0 && new_r < 8 && new_c >= 0 && new_c < 8)
-                validStepsMatrix[new_r][new_c] = 1;
+                this.validSteps.push([new_r, new_c]);
         }
-        displayMatrix();
-
+        console.log(this.calcValidSteps);
+        displayValidSteps();
     }
+}
+function validStepsFunc() {
+
 }
 class Pawn extends Piece {
     constructor(color) {
         super(color, 'pawn')
         this.d = (color === 'black') ? -1 : 1;
-        this.validSteps = [[]];
-        this.el.addEventListener('click', (e) => { this.displayValidSteps(e); });
+        this.el.addEventListener('click', (e) => { this.calcValidSteps(e); });
     }
-    displayValidSteps(e) {
+    calcValidSteps(e) {
         e.stopPropagation();
-        cleanValidStepsMatrix();
+        cleanValidSteps();
         currentPiece = this;
         let new_r = this.r + this.d;
         if (new_r >= 0 && new_r < 8) {
-            validStepsMatrix[new_r][this.c] = 1;
-            console.log("hh");
+            this.validSteps.push([new_r, this.c]);
         }
-        displayMatrix();
+        displayValidSteps();
     }
 }
-function displayMatrix() {
-    let i, j;
-    for (i = 0; i < ROWS; i++) {
-        for (j = 0; j < COLS; j++) {
-            table.rows[i].cells[j].classList.remove('checked');
-            table.rows[i].cells[j].innerHTML = "";
-            if (validStepsMatrix[i][j] === 1) {
-                table.rows[i].cells[j].classList.add("checked");
-                table.rows[i].cells[j].addEventListener('click', validMoveHandler);
-            }
-            try {
-                matrix[i][j].display(table);
-            } catch (error) {
-            }
-        }
+function displayValidSteps() {
+    for (let step of currentPiece.validSteps) {
+        table.rows[step[0]].cells[step[1]].classList.add("checked");
+        table.rows[step[0]].cells[step[1]].addEventListener('click', validMoveHandler);
     }
     if (currentPiece !== undefined)
         table.rows[currentPiece.r].cells[currentPiece.c].classList.add('checked');
@@ -133,41 +140,24 @@ function displayMatrix() {
 function validMoveHandler(e) {
     let cell = e.target;
     let new_c = cell.cellIndex, new_r = cell.parentNode.rowIndex; // get new indexes
-    console.log(currentPiece);
     matrix[currentPiece.r][currentPiece.c] = undefined; // free the prev position
-    console.log(currentPiece);
-    console.log("valid steps matrix", validStepsMatrix);
+    table.rows[currentPiece.r].cells[currentPiece.c].innerHTML = ''; // remove piece from prev cell
+    table.rows[currentPiece.r].cells[currentPiece.c].classList.remove('checked'); // 
     matrix[new_r][new_c] = currentPiece; // set into the matrix new position
     currentPiece.setLocation(new_r, new_c); // updet new indexes in the OBJ
-
-    console.log(matrix);
-    currentPiece = undefined;
-    cleanValidStepsMatrix();
-    displayMatrix();
-
-
+    table.rows[currentPiece.r].cells[currentPiece.c].appendChild(currentPiece.el);
+    cleanValidSteps();
 }
 
-function cleanValidStepsMatrix() {      // 
-    for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-            validStepsMatrix[i][j] = undefined;
-            // if (currentPiece) {
-            console.log("test");
-            table.rows[i].cells[j].removeEventListener('click', validMoveHandler);
-            // table.rows[i].cells[j].innerHTML = "111";
-            // }
-        }
+function cleanValidSteps() { // clean step of prev piece from the board
+    if (!currentPiece) return;
+    for (let step of currentPiece.validSteps) {
+        table.rows[step[0]].cells[step[1]].classList.remove('checked');
+        table.rows[step[0]].cells[step[1]].removeEventListener('click', validMoveHandler);
     }
+    table.rows[currentPiece.r].cells[currentPiece.c].classList.remove('checked');
 }
-function cleanTheBoard() {
-    for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-            table.rows[i].cells[j].innerHTML = "";
-            table.rows[i].cells[j].classList.remove('checked');
-        }
-    }
-}
+
 function createGroups() {
     createGroup('white', whiteGroup);
     createGroup('black', blackGroup);
@@ -191,7 +181,6 @@ function createGroup(color, group) {    // insert to group all the soldiers
     }
 }
 function placeAllSoldiers() {
-    cleanTheBoard(); // clean the board befor
     placeSoldiers(whiteGroup); // place white pices on the board
     placeSoldiers(blackGroup);// place black pices on the board
 }
@@ -202,7 +191,6 @@ function placeSoldiers(group) { //in matrix & into HTML table
             group[key].display(table);
         }
     }
-    console.log(matrix);
 }
 function createBoard() {
     let areaObj = document.getElementById('board-box');
