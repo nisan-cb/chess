@@ -42,6 +42,7 @@ class Queen extends Piece {
         this.el.addEventListener('click', (e) => { this.calcValidSteps(e) });
     }
     calcValidSteps(e) {
+        this.validSteps = [];
         e.stopPropagation();
         cleanValidSteps();
         currentPiece = this;
@@ -55,6 +56,7 @@ class Rook extends Piece {
         this.el.addEventListener('click', (e) => { this.calcValidSteps(e) });
     }
     calcValidSteps(e) {
+        this.validSteps = [];
         e.stopPropagation();
         cleanValidSteps();
         currentPiece = this;
@@ -71,6 +73,7 @@ class Bishop extends Piece {
         this.el.addEventListener('click', (e) => { this.calcValidSteps(e) })
     }
     calcValidSteps(e) {
+        this.validSteps = [];
         e.stopPropagation();
         cleanValidSteps();
         currentPiece = this;
@@ -96,6 +99,7 @@ class Knight extends Piece {
         this.el.addEventListener('click', (e) => { this.calcValidSteps(e) });
     }
     calcValidSteps(e) {
+        this.validSteps = [];
         e.stopPropagation();
         cleanValidSteps();
         currentPiece = this;
@@ -118,6 +122,7 @@ class Pawn extends Piece {
         this.el.addEventListener('click', (e) => { this.calcValidSteps(e); });
     }
     calcValidSteps(e) {
+        this.validSteps = [];
         e.stopPropagation();
         cleanValidSteps();
         currentPiece = this;
