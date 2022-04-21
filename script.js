@@ -1,11 +1,8 @@
 //please start from init function
-let section1;
 let table;
 let boardData;
 const ROWS = 8;
 const COLS = 8;
-// let matrix = Array(ROWS).fill().map(() => Array(COLS).fill());
-let validStepsMatrix = Array(ROWS).fill().map(() => Array(COLS).fill());
 let whiteGroup = {};
 let blackGroup = {};
 let currentPiece;
@@ -99,84 +96,70 @@ class Piece {
         }
     }
     checkDownLeft() {
-        let steps = [];
         for (let i = 1; this.r + i < ROWS && this.c - i >= 0; i++) {
             let result = this.checkStep(this.r + i, this.c - i);
             if (result === undefined)
                 break;
-            steps.push(result);
+            this.optionalSteps.push(result);
         }
-        return steps;
     }
     checkDownRight() {
-        let steps = [];
         for (let i = 1; this.r + i < ROWS && this.c + i < COLS; i++) {
             let result = this.checkStep(this.r + i, this.c + i);
             if (result === undefined)
                 break;
-            steps.push(result);
+            this.optionalSteps.push(result);
         }
-        return steps;
     }
     checkUpRight() {
-        let steps = [];
         for (let i = 1; this.r - i >= 0 && this.c + i < COLS; i++) {
             let result = this.checkStep(this.r - i, this.c + i);
             if (result === undefined)
                 break;
-            steps.push(result);
+            this.optionalSteps.push(result);
         }
-        return steps;
     }
     checkUpLeft() {
-        let steps = [];
         for (let i = 1; this.r - i >= 0 && this.c - i >= 0; i++) {
             let result = this.checkStep(this.r - i, this.c - i);
             if (result === undefined)
                 break;
-            steps.push(result);
+            this.optionalSteps.push(result);
         }
-        return steps;
     }
     checkLeft() {
-        let steps = [];
+        console.log("hiiiii");
+        console.log("this = ", this);
         for (let i = this.c - 1; i >= 0; i--) {
             let result = this.checkStep(this.r, i);
             if (result === undefined)
                 break;
-            steps.push(result);
+            this.optionalSteps.push(result);
         }
-        return steps;
     }
     checkRight() {
-        let steps = [];
         for (let i = this.c + 1; i < COLS; i++) {
             let result = this.checkStep(this.r, i);
             if (result === undefined)
                 break;
-            steps.push(result);
+            this.optionalSteps.push(result);
         }
-        return steps;
     }
     checkUp() {
-        let steps = [];
         for (let i = this.r - 1; i >= 0; i--) {
             let result = this.checkStep(i, this.c);
             if (result === undefined)
                 break;
-            steps.push(result);
+            this.optionalSteps.push(result);
         }
-        return steps;
     }
     checkDown() {
-        let steps = [];
         for (let i = this.r + 1; i < ROWS; i++) {
             let result = this.checkStep(i, this.c);
             if (result === undefined)
                 break;
-            steps.push(result);
+            this.optionalSteps.push(result);
         }
-        return steps;
     }
 }
 class King extends Piece {
@@ -206,14 +189,14 @@ class Queen extends Piece {
     }
     calcOptionalSteps() {
         this.optionalSteps = [];
-        this.optionalSteps.push(...this.checkLeft());
-        this.optionalSteps.push(...this.checkRight());
-        this.optionalSteps.push(...this.checkUp());
-        this.optionalSteps.push(...this.checkDown());
-        this.optionalSteps.push(...this.checkDownLeft());
-        this.optionalSteps.push(...this.checkDownRight());
-        this.optionalSteps.push(...this.checkUpRight());
-        this.optionalSteps.push(...this.checkUpLeft());
+        this.checkLeft();
+        this.checkRight();
+        this.checkUp();
+        this.checkDown();
+        this.checkDownLeft();
+        this.checkDownRight();
+        this.checkUpRight();
+        this.checkUpLeft();
     }
 }
 class Rook extends Piece {
@@ -222,10 +205,10 @@ class Rook extends Piece {
     }
     calcOptionalSteps(e) {
         this.optionalSteps = [];
-        this.optionalSteps.push(...this.checkLeft());
-        this.optionalSteps.push(...this.checkRight());
-        this.optionalSteps.push(...this.checkUp());
-        this.optionalSteps.push(...this.checkDown());
+        this.checkLeft();
+        this.checkRight();
+        this.checkUp();
+        this.checkDown();
     }
 }
 class Bishop extends Piece {
@@ -234,10 +217,10 @@ class Bishop extends Piece {
     }
     calcOptionalSteps(e) {
         this.optionalSteps = [];
-        this.optionalSteps.push(...this.checkDownLeft());
-        this.optionalSteps.push(...this.checkDownRight());
-        this.optionalSteps.push(...this.checkUpRight());
-        this.optionalSteps.push(...this.checkUpLeft());
+        this.checkDownLeft()
+        this.checkDownRight()
+        this.checkUpRight()
+        this.checkUpLeft()
     }
 }
 class Knight extends Piece {
@@ -306,7 +289,6 @@ function createGroup(color, group) {    // insert to group all the soldiers
     }
 }
 function placeAllSoldiers() {
-    whiteGroup["queen"]
     placeSoldiers(whiteGroup); // place white pices on the board
     placeSoldiers(blackGroup);// place black pices on the board
 }
