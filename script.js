@@ -88,123 +88,93 @@ class Piece {
         this.r = r;
         this.c = c;
     }
+    checkStep(r, c) {
+        let cellData = boardData.getCellData(r, c);
+        if (cellData == undefined)
+            return [r, c];
+        else if (cellData.color === this.color)
+            return undefined;
+        else if (cellData.color !== this.color) {
+            return [r, c];
+        }
+    }
     checkDownLeft() {
         let steps = [];
         for (let i = 1; this.r + i < ROWS && this.c - i >= 0; i++) {
-            let cellData = boardData.getCellData(this.r + i, this.c - i);
-            if (cellData == undefined)
-                steps.push([this.r + i, this.c - i]);
-            else if (cellData.color === this.color)
-                return steps;
-            else if (cellData.color !== this.color) {
-                steps.push([this.r + i, this.c - i]);
-                return steps;
-            }
+            let result = this.checkStep(this.r + i, this.c - i);
+            if (result === undefined)
+                break;
+            steps.push(result);
         }
         return steps;
     }
     checkDownRight() {
         let steps = [];
         for (let i = 1; this.r + i < ROWS && this.c + i < COLS; i++) {
-            let cellData = boardData.getCellData(this.r + i, this.c + i);
-            if (cellData == undefined)
-                steps.push([this.r + i, this.c + i]);
-            else if (cellData.color === this.color)
-                return steps;
-            else if (cellData.color !== this.color) {
-                steps.push([this.r + i, this.c + i]);
-                return steps;
-            }
+            let result = this.checkStep(this.r + i, this.c + i);
+            if (result === undefined)
+                break;
+            steps.push(result);
         }
         return steps;
     }
     checkUpRight() {
         let steps = [];
         for (let i = 1; this.r - i >= 0 && this.c + i < COLS; i++) {
-            let cellData = boardData.getCellData(this.r - i, this.c + i);
-            if (cellData == undefined)
-                steps.push([this.r - i, this.c + i]);
-            else if (cellData.color === this.color)
-                return steps;
-            else if (cellData.color !== this.color) {
-                steps.push([this.r - i, this.c + i]);
-                return steps;
-            }
+            let result = this.checkStep(this.r - i, this.c + i);
+            if (result === undefined)
+                break;
+            steps.push(result);
         }
         return steps;
     }
     checkUpLeft() {
         let steps = [];
         for (let i = 1; this.r - i >= 0 && this.c - i >= 0; i++) {
-            let cellData = boardData.getCellData(this.r - i, this.c - i);
-            if (cellData == undefined)
-                steps.push([this.r - i, this.c - i]);
-            else if (cellData.color === this.color)
-                return steps;
-            else if (cellData.color !== this.color) {
-                steps.push([this.r - i, this.c - i]);
-                return steps;
-            }
+            let result = this.checkStep(this.r - i, this.c - i);
+            if (result === undefined)
+                break;
+            steps.push(result);
         }
         return steps;
     }
     checkLeft() {
         let steps = [];
         for (let i = this.c - 1; i >= 0; i--) {
-            let cellData = boardData.getCellData(this.r, i);
-            if (cellData == undefined)
-                steps.push([this.r, i]);
-            else if (cellData.color === this.color)
-                return steps;
-            else if (cellData.color !== this.color) {
-                steps.push([this.r, i]);
-                return steps;
-            }
+            let result = this.checkStep(this.r, i);
+            if (result === undefined)
+                break;
+            steps.push(result);
         }
         return steps;
     }
     checkRight() {
         let steps = [];
         for (let i = this.c + 1; i < COLS; i++) {
-            let cellData = boardData.getCellData(this.r, i);
-            if (cellData == undefined)
-                steps.push([this.r, i]);
-            else if (cellData.color === this.color)
-                return steps;
-            else if (cellData.color !== this.color) {
-                steps.push([this.r, i]);
-                return steps;
-            }
+            let result = this.checkStep(this.r, i);
+            if (result === undefined)
+                break;
+            steps.push(result);
         }
         return steps;
     }
     checkUp() {
         let steps = [];
         for (let i = this.r - 1; i >= 0; i--) {
-            let cellData = boardData.getCellData(i, this.c);
-            if (cellData == undefined)
-                steps.push([i, this.c]);
-            else if (cellData.color === this.color)
-                return steps;
-            else if (cellData.color !== this.color) {
-                steps.push([i, this.c]);
-                return steps;
-            }
+            let result = this.checkStep(i, this.c);
+            if (result === undefined)
+                break;
+            steps.push(result);
         }
         return steps;
     }
     checkDown() {
         let steps = [];
         for (let i = this.r + 1; i < ROWS; i++) {
-            let cellData = boardData.getCellData(i, this.c);
-            if (cellData == undefined)
-                steps.push([i, this.c]);
-            else if (cellData.color === this.color)
-                return steps;
-            else if (cellData.color !== this.color) {
-                steps.push([i, this.c]);
-                return steps;
-            }
+            let result = this.checkStep(i, this.c);
+            if (result === undefined)
+                break;
+            steps.push(result);
         }
         return steps;
     }
@@ -378,3 +348,6 @@ window.addEventListener('load', () => {
     console.log('page is fully loaded');
     init();
 });
+
+
+//380
