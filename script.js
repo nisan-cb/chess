@@ -122,78 +122,18 @@ class Piece {
         this.r = r;
         this.c = c;
     }
-    checkStep(r, c) {
-        let cellData = boardData.getCellData(r, c);
-        if (cellData == undefined)
-            return [r, c];
-        else if (cellData.color === this.color)
-            return undefined;
-        else if (cellData.color !== this.color) {
-            return [r, c];
-        }
-    }
-    checkDownLeft() {
-        for (let i = 1; this.r + i < ROWS && this.c - i >= 0; i++) {
-            let result = this.checkStep(this.r + i, this.c - i);
-            if (result === undefined)
+    checkPath(i, j) {
+        let r = this.r + i, c = this.c + j;
+        for (; r >= 0 && r < ROWS && c >= 0 && c < COLS; r += i, c += j) {
+            let cellData = boardData.getCellData(r, c);
+            if (cellData == undefined)
+                this.optionalSteps.push([r, c]);
+            else if (cellData.color === this.color)
                 break;
-            this.optionalSteps.push(result);
-        }
-    }
-    checkDownRight() {
-        for (let i = 1; this.r + i < ROWS && this.c + i < COLS; i++) {
-            let result = this.checkStep(this.r + i, this.c + i);
-            if (result === undefined)
+            else if (cellData.color !== this.color) {
+                this.optionalSteps.push([r, c]);
                 break;
-            this.optionalSteps.push(result);
-        }
-    }
-    checkUpRight() {
-        for (let i = 1; this.r - i >= 0 && this.c + i < COLS; i++) {
-            let result = this.checkStep(this.r - i, this.c + i);
-            if (result === undefined)
-                break;
-            this.optionalSteps.push(result);
-        }
-    }
-    checkUpLeft() {
-        for (let i = 1; this.r - i >= 0 && this.c - i >= 0; i++) {
-            let result = this.checkStep(this.r - i, this.c - i);
-            if (result === undefined)
-                break;
-            this.optionalSteps.push(result);
-        }
-    }
-    checkLeft() {
-        for (let i = this.c - 1; i >= 0; i--) {
-            let result = this.checkStep(this.r, i);
-            if (result === undefined)
-                break;
-            this.optionalSteps.push(result);
-        }
-    }
-    checkRight() {
-        for (let i = this.c + 1; i < COLS; i++) {
-            let result = this.checkStep(this.r, i);
-            if (result === undefined)
-                break;
-            this.optionalSteps.push(result);
-        }
-    }
-    checkUp() {
-        for (let i = this.r - 1; i >= 0; i--) {
-            let result = this.checkStep(i, this.c);
-            if (result === undefined)
-                break;
-            this.optionalSteps.push(result);
-        }
-    }
-    checkDown() {
-        for (let i = this.r + 1; i < ROWS; i++) {
-            let result = this.checkStep(i, this.c);
-            if (result === undefined)
-                break;
-            this.optionalSteps.push(result);
+            }
         }
     }
 }
@@ -221,41 +161,37 @@ class King extends Piece {
 class Queen extends Piece {
     constructor(color) {
         super(color, 'queen')
+        this.directions = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]];
     }
     calcOptionalSteps() {
         this.optionalSteps = [];
-        this.checkLeft();
-        this.checkRight();
-        this.checkUp();
-        this.checkDown();
-        this.checkDownLeft();
-        this.checkDownRight();
-        this.checkUpRight();
-        this.checkUpLeft();
+        for (let direction of this.directions) {
+            this.checkPath(direction[0], direction[1]);
+        }
     }
 }
 class Rook extends Piece {
     constructor(color) {
         super(color, 'rook')
+        this.directions = [[-1, 0], [0, 1], [1, 0], [0, -1]]
     }
     calcOptionalSteps(e) {
         this.optionalSteps = [];
-        this.checkLeft();
-        this.checkRight();
-        this.checkUp();
-        this.checkDown();
+        for (let direction of this.directions) {
+            this.checkPath(direction[0], direction[1]);
+        }
     }
 }
 class Bishop extends Piece {
     constructor(color) {
         super(color, 'bishop')
+        this.directions = [[-1, -1], [-1, 1], [1, 1], [1, -1]]
     }
     calcOptionalSteps(e) {
         this.optionalSteps = [];
-        this.checkDownLeft()
-        this.checkDownRight()
-        this.checkUpRight()
-        this.checkUpLeft()
+        for (let direction of this.directions) {
+            this.checkPath(direction[0], direction[1]);
+        }
     }
 }
 class Knight extends Piece {
@@ -332,4 +268,4 @@ window.addEventListener('load', () => {
     init();
 });
 
-//334
+//270
