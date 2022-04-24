@@ -14,13 +14,13 @@ section {
     display: flex;
     align-items: center;
     align-content: center;
-    background-color: black;
+    background-color: #312e2b;
     flex-direction: column;
 }
 
 h1 {
     color: antiquewhite;
-    margin: 30px 0 50px;
+    margin: 30px 0 30px;
 }
 
 
@@ -35,8 +35,8 @@ td {
 
 
 td {
-    width: 70px;
-    height: 70px;
+    width: 65px;
+    height: 65px;
     text-align: center;
 }
 
@@ -74,10 +74,37 @@ tr:nth-child(even) td:nth-child(odd) {
 }
 
 #board img {
-    width: inherit;
+    width: 90%;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
+}
+
+#turn {
+    /* border: 1px solid brown; */
+    margin: 0 0 20px 0;
+}
+
+#turn span {
+    font-size: 80%;
+    margin: 0 10px;
+    padding: 5px 8px;
+    font-weight: bold;
+    border-radius: 16px;
+}
+
+#turn #white-flag {
+    color: white;
+    background-color: black;
+}
+
+#turn #black-flag {
+    color: black;
+    background-color: white;
+}
+
+.turn {
+    border: 2px solid greenyellow;
 }

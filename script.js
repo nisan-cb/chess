@@ -3,14 +3,17 @@ let table;
 let boardData;
 const ROWS = 8;
 const COLS = 8;
-let whiteGroup = {};
-let blackGroup = {};
 let currentPiece;
 
 class BoardData {
     constructor(rows, cols, tableElement) {
         this.matrix = Array(rows).fill().map(() => Array(cols).fill());
         this.table = tableElement;
+        this.whiteGroup = {};
+        this.blackGroup = {};
+        this.createGroup('white', this.whiteGroup); // create white group
+        this.createGroup('black', this.blackGroup); // create black group
+        this.turn = 'white';
     }
     getCellData(r, c) {
         return this.matrix[r][c];
@@ -18,7 +21,36 @@ class BoardData {
     insertPiece(pice) {
         this.matrix[pice.r][pice.c] = pice;
     }
-
+    createGroup(color, group) {    // insert piece into group with starting positions
+        let k = 0;
+        if (color == 'black') k = 7;
+        group["king"] = new King(color); group["king"].setLocation(k, 4);
+        group["queen"] = new Queen(color); group["queen"].setLocation(k, 3);
+        group["rookL"] = new Rook(color); group["rookL"].setLocation(k, 0);
+        group["rookR"] = new Rook(color); group["rookR"].setLocation(k, 7);
+        group["bishopL"] = new Bishop(color); group["bishopL"].setLocation(k, 2);
+        group["bishopR"] = new Bishop(color); group["bishopR"].setLocation(k, 5);
+        group["knightL"] = new Knight(color); group["knightL"].setLocation(k, 1);
+        group["knightR"] = new Knight(color); group["knightR"].setLocation(k, 6);
+        k = 1;
+        if (color == 'black') k = 6;
+        for (let i = 0; i < 8; i++) {
+            group[`pawn${i}`] = new Pawn(color);
+            group[`pawn${i}`].setLocation(k, i);
+        }
+    }
+    placeAllSoldiers() {
+        this.placeSoldiers(this.whiteGroup); // place white pices on the board
+        this.placeSoldiers(this.blackGroup);// place black pices on the board
+    }
+    placeSoldiers(group) { //in matrix & into HTML table
+        for (let key in group) {
+            if (group[key] !== undefined) {
+                boardData.insertPiece(group[key]);// into matrix
+                group[key].display(table);// into HTML table
+            }
+        }
+    }
     displayStepsOf(currentPiece) {
         for (let step of currentPiece.optionalSteps) {
             table.rows[step[0]].cells[step[1]].classList.add("checked");
@@ -35,9 +67,10 @@ class BoardData {
         boardData.matrix[new_r][new_c] = currentPiece; // set into the matrix new position
         boardData.table.rows[currentPiece.r].cells[currentPiece.c].classList.remove('checked'); // 
         boardData.table.rows[currentPiece.r].cells[currentPiece.c].innerHTML = ''; // remove piece from prev cell
-        currentPiece.setLocation(new_r, new_c); // updet new indexes in the OBJ
+        currentPiece.setLocation(new_r, new_c); // updet new indexes in the currentPiece
         boardData.table.rows[currentPiece.r].cells[currentPiece.c].appendChild(currentPiece.el);
         boardData.cleanValidSteps();
+        boardData.switchTurn();
         if (currentPiece.constructor.name === 'Pawn') currentPiece.firstStep = false;
         currentPiece = undefined;
     }
@@ -49,9 +82,14 @@ class BoardData {
         }
         this.table.rows[currentPiece.r].cells[currentPiece.c].classList.remove('checked');
     }
+    switchTurn() {
+        document.getElementById(`${this.turn}-flag`).classList.remove('turn');
+        this.turn = (this.turn === 'white') ? 'black' : 'white';
+        document.getElementById(`${this.turn}-flag`).classList.add('turn');
 
-
+    }
 }
+
 class Piece {
     constructor(color, role) {
         this.color = color;
@@ -60,8 +98,9 @@ class Piece {
         this.el.src = this.src;
         this.r = 0;
         this.c = 0;
-        this.optionalSteps = [];
+        this.optionalSteps = []; // optional valid steps
         this.el.addEventListener('click', (e) => {
+            if (boardData.turn !== this.color) { alert(`it is ${boardData.turn} turn to play`); return };
             e.stopPropagation();
             boardData.cleanValidSteps();
             currentPiece = this;
@@ -70,12 +109,10 @@ class Piece {
         })
         this.el.addEventListener("mouseover", (e) => {
             this.calcOptionalSteps();
-            console.log(this.optionalSteps.length);
             if (this.optionalSteps.length === 0)
                 this.el.style.cursor = 'not-allowed';
             else
                 this.el.style.cursor = 'pointer';
-
         })
     }
     display(table) {
@@ -128,8 +165,6 @@ class Piece {
         }
     }
     checkLeft() {
-        console.log("hiiiii");
-        console.log("this = ", this);
         for (let i = this.c - 1; i >= 0; i--) {
             let result = this.checkStep(this.r, i);
             if (result === undefined)
@@ -240,7 +275,6 @@ class Knight extends Piece {
         }
     }
 }
-
 class Pawn extends Piece {
     constructor(color) {
         super(color, 'pawn')
@@ -266,40 +300,7 @@ class Pawn extends Piece {
     }
 }
 
-function createGroups() {
-    createGroup('white', whiteGroup);
-    createGroup('black', blackGroup);
-}
-function createGroup(color, group) {    // insert to group all the soldiers
-    let k = 0;
-    if (color == 'black') k = 7;
-    group["king"] = new King(color); group["king"].setLocation(k, 4);
-    group["queen"] = new Queen(color); group["queen"].setLocation(k, 3);
-    group["rookL"] = new Rook(color); group["rookL"].setLocation(k, 0);
-    group["rookR"] = new Rook(color); group["rookR"].setLocation(k, 7);
-    group["bishopL"] = new Bishop(color); group["bishopL"].setLocation(k, 2);
-    group["bishopR"] = new Bishop(color); group["bishopR"].setLocation(k, 5);
-    group["knightL"] = new Knight(color); group["knightL"].setLocation(k, 1);
-    group["knightR"] = new Knight(color); group["knightR"].setLocation(k, 6);
-    k = 1;
-    if (color == 'black') k = 6;
-    for (let i = 0; i < 8; i++) {
-        group[`pawn${i}`] = new Pawn(color);
-        group[`pawn${i}`].setLocation(k, i);
-    }
-}
-function placeAllSoldiers() {
-    placeSoldiers(whiteGroup); // place white pices on the board
-    placeSoldiers(blackGroup);// place black pices on the board
-}
-function placeSoldiers(group) { //in matrix & into HTML table
-    for (let key in group) {
-        if (group[key] !== undefined) {
-            boardData.insertPiece(group[key]);
-            group[key].display(table);
-        }
-    }
-}
+
 function createBoard() {
     let areaObj = document.getElementById('board-box');
     if (!areaObj) {
@@ -307,7 +308,7 @@ function createBoard() {
         return;
     }
     areaObj.innerHTML = "";
-    table = document.createElement('table');
+    let table = document.createElement('table');
     table.setAttribute('id', 'board');
     areaObj.appendChild(table);
     for (let i = 0; i < ROWS; i++) {
@@ -316,14 +317,14 @@ function createBoard() {
             let td = tr.insertCell();
         }
     }
-    boardData = new BoardData(ROWS, COLS, table);
+    return table;
 }
 
 const init = () => {
     console.log("hello from init funcion ");
-    createBoard(); // create board
-    createGroups(); // creating black group and white group
-    placeAllSoldiers();
+    table = createBoard(); // create board and return table HTML elemnt
+    boardData = new BoardData(ROWS, COLS, table);
+    boardData.placeAllSoldiers();// place all pieces on the board
 }
 
 window.addEventListener('load', () => {
@@ -331,5 +332,4 @@ window.addEventListener('load', () => {
     init();
 });
 
-
-//380
+//334
