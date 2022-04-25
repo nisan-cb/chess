@@ -113,5 +113,5 @@ tr:nth-child(even) td:nth-child(odd) {
 }
 
 .turn {
-    border: 2px solid greenyellow;
+    border: 4px solid greenyellow;
 }
