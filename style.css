@@ -42,6 +42,7 @@ td {
 
 td:hover {
     cursor: crosshair;
+    background-color: rgba(0, 139, 139, 0.789) !important;
 }
 
 tr:nth-child(odd) td:nth-child(odd) {
