@@ -81,7 +81,6 @@ class BoardData {
     }
     isKingInDanger(king) {
         const opponentPosibaleMoves = this.getOpponentOptionalMoves(king.getOpponentColor());
-        console.log(opponentPosibaleMoves);
         if (opponentPosibaleMoves[king.r][king.c] > 0)
             return true;
         return false;

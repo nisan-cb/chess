@@ -200,12 +200,9 @@ class Pawn extends Piece {
         let upRightCell = boardData.getCellData(new_r, this.c + 1);
         this.group.allPosibleMoves[new_r][this.c - 1]++;
         this.group.allPosibleMoves[new_r][this.c + 1]++;
-
         if (upLeftCell !== undefined && upLeftCell.color !== this.color)
             this.optionalSteps.push([new_r, this.c - 1]);
-
         if (upRightCell !== undefined && upRightCell.color !== this.color)
             this.optionalSteps.push([new_r, this.c + 1]);
-
     }
 }
