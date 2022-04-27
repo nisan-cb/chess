@@ -9,7 +9,7 @@ function createBoard() {
     let areaObj = document.getElementById('board-box');
     if (!areaObj) {
         console.log("error in createBord function - areaObj not defined");
-        return;
+        return undefined;
     }
     areaObj.innerHTML = "";
     let table = document.createElement('table');
@@ -35,5 +35,3 @@ window.addEventListener('load', () => {
     console.log('page is fully loaded');
     init();
 });
-
-//269
