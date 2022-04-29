@@ -111,6 +111,7 @@ class BoardData {
     }
 
     displayMoves(piece) {
+        this.table.rows[piece.r].cells[piece.c].classList.add('selected');
         for (const step of piece.optionalSteps)
             this.table.rows[step[0]].cells[step[1]].classList.add('step');
     }
@@ -119,6 +120,8 @@ class BoardData {
         if (!this.currentPiece) return;
         for (const step of this.currentPiece.optionalSteps)
             this.table.rows[step[0]].cells[step[1]].classList.remove('step');
+        this.table.rows[this.currentPiece.r].cells[this.currentPiece.c].classList.remove('selected');
+
     }
 
     getOpponentStepsMap() {
