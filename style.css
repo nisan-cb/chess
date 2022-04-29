@@ -38,6 +38,8 @@ td {
     width: 65px;
     height: 65px;
     text-align: center;
+    /* pointer-events: none; */
+
 }
 
 td:hover {
@@ -68,7 +70,6 @@ tr:nth-child(even) td:nth-child(odd) {
 }
 
 .step {
-    /* border: 1px solid rgb(0, 0, 0); */
     background-color: rgba(30, 153, 73, 0.727) !important;
     cursor: pointer !important;
 }

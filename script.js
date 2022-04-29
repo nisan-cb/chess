@@ -3,7 +3,6 @@ let table;
 let boardData;
 const ROWS = 8;
 const COLS = 8;
-let currentPiece;
 
 function createBoard() {
     let areaObj = document.getElementById('board-box');
@@ -28,7 +27,7 @@ const init = () => {
     console.log("hello from init funcion ");
     table = createBoard(); // create board and return table HTML elemnt
     boardData = new BoardData(ROWS, COLS, table);
-    boardData.display();// place all pieces on the board
+    boardData.start();// place all pieces on the board
 }
 
 window.addEventListener('load', () => {
