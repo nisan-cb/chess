@@ -38,7 +38,6 @@ class BoardData {
     }
 
     callCurrentGroupPossibleSteps() {
-        console.log(this.currentGroup)
         for (const piece of Object.values(this.currentGroup.piecesList)) {
             if (!piece) continue;
             piece.calcOptionalSteps(this.matrix);
@@ -124,7 +123,7 @@ class BoardData {
 
     getOpponentStepsMap() {
         const opponentGroup = this.getOpponentGroup();
-        return opponentGroup.callcAllPosibaleMoves(this.matrix);
+        return opponentGroup.callcAllPosibaleMoves(this.matrix, false);
     }
 
     getOpponentGroup() {

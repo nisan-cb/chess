@@ -22,12 +22,12 @@ class Group {
             this.piecesList[`pawn${i}`] = new Pawn(this, k, i, `pawn${i}`);
     }
 
-    callcAllPosibaleMoves(matrix) {
+    callcAllPosibaleMoves(matrix, flag = true) {
         this.allPosibleMoves.map((array) => array.fill(0));
         for (const key in this.piecesList) {
             const piece = this.piecesList[key];
             if (!piece) continue;
-            piece.calcOptionalSteps(matrix);
+            piece.calcOptionalSteps(matrix, flag);
             for (const step of piece.optionalSteps)
                 this.allPosibleMoves[step[0]][step[1]]++;
         }
