@@ -86,7 +86,6 @@ class BoardData {
     switch() {
         this.displayTurn();
         this.currentPiece = undefined;
-        this.currentGroup = this.getOpponentGroup();
         this.callCurrentGroupPossibleSteps();
         const dangerCells = this.getOpponentStepsMap();
         this.filterCurrentKingSteps(dangerCells);
@@ -182,6 +181,7 @@ class BoardData {
 
     displayTurn() {
         document.getElementById(`${this.currentGroup.color}-flag`).classList.remove('turn');
+        this.currentGroup = this.getOpponentGroup();
         document.getElementById(`${this.currentGroup.color}-flag`).classList.add('turn');
     }
 
