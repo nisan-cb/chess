@@ -129,4 +129,5 @@ tr:nth-child(even) td:nth-child(odd) {
     width: max-content;
     padding: 50px 30px;
     border-radius: 20px;
+    box-shadow: 0px -10px 6px #ddd;
 }

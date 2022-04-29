@@ -91,7 +91,7 @@ class BoardData {
         this.checkMode = this.isCheckMode(this.currentGroup)
         if (this.checkMode) console.log('protect on your king !!');
         if (this.isCheckmateMode())
-            this.createWinnerMessage(`${this.getOpponentGroup().color} wins!`);
+            this.createMessage(`${this.getOpponentGroup().color} wins!`);
     }
 
     isValidMove(i, j) {
@@ -187,8 +187,7 @@ class BoardData {
         document.getElementById(`${this.currentGroup.color}-flag`).classList.add('turn');
     }
 
-    createWinnerMessage(message) {
-        console.log('wins');
+    createMessage(message) {
         let div = document.createElement('div');
         div.classList.add('message-box');
         div.innerHTML = message;
